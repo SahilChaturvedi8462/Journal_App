@@ -3,9 +3,9 @@ package net.BabaJI.journalApp.Service;
 import net.BabaJI.journalApp.Repositery.UserRepo;
 import net.BabaJI.journalApp.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
-import org.mockito.ArgumentMatchers;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,13 +17,18 @@ import java.util.ArrayList;
 
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+
 public class UserServiceImp {
-    @Autowired
+    @InjectMocks
     private UserDetailsServiceImpl userDetailsService;
 
-    @MockBean
+    @Mock
     private UserRepo userRepo;
+
+    @BeforeEach
+    void setUp(){//initializes each mocks
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     void loadByusernameTest() {
