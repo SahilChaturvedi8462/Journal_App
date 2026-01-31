@@ -3,3 +3,9 @@ spring:
     mongodb:
       uri: ${MONGODB_URI}
       auto-index-creation: true
+      database: journaldb
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  profiles:
+    active: prod
