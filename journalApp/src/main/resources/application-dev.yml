@@ -8,3 +8,9 @@ Server:
   port: 8080
   Servelet:
     context-path: /journal
+
+logging:
+  level:
+    net:
+      BabaJI:
+        journalApp: DEBUG
