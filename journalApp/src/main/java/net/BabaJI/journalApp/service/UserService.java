@@ -3,6 +3,8 @@ package net.BabaJI.journalApp.service;
 import net.BabaJI.journalApp.Repositery.UserRepo;
 import net.BabaJI.journalApp.entity.User;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,14 +24,26 @@ public class UserService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     public void saveEntry(User user) {
         userRepo.save(user);
     }
 
-    public void saveNewEntry(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Arrays.asList("USER"));
-        userRepo.save(user);
+    public boolean saveNewEntry(User user){
+        try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(Arrays.asList("USER"));
+            userRepo.save(user);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error occured {}: ", user.getUserName(), e);
+//            logger.info("yeah baby fuck you");
+//            logger.warn("yeah baby fuck you");
+//            logger.debug("yeah baby fuck you");
+//            logger.trace("yeah baby fuck you");
+            return false;
+        }
     }
     public void saveAdmin(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));

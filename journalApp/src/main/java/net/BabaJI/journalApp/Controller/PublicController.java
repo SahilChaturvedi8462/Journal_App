@@ -3,6 +3,8 @@ package net.BabaJI.journalApp.Controller;
 import net.BabaJI.journalApp.entity.User;
 import net.BabaJI.journalApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,7 +21,11 @@ public class PublicController {
     }
 
     @PostMapping("/create-user")
-    public void createUser(@RequestBody User userData){
-        userService.saveNewEntry(userData);
+    public ResponseEntity<?> createUser(@RequestBody User userData){
+        boolean b = userService.saveNewEntry(userData);
+        if (b){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
