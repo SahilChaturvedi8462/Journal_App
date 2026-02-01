@@ -32,7 +32,7 @@ public class UserServiceTest {
     @CsvSource({
             "1,2,3",
             "2,2,4",
-            "3,4,3"
+            "3,1,4"
     })
     public void test(int a, int b, int expected){
         assertEquals(expected, a+b);

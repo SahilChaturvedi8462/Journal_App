@@ -1,3 +1,9 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      auto-index-creation: true
+      database: journaldb
 Server:
   port: 8081
   Servelet:
