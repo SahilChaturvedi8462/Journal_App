@@ -1,5 +1,6 @@
 package net.BabaJI.journalApp.service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.BabaJI.journalApp.Repositery.JournalEntryRepo;
 import net.BabaJI.journalApp.entity.JournalEntry;
 import net.BabaJI.journalApp.entity.User;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class JournalEntryService {
 
     @Autowired
@@ -56,7 +58,7 @@ public class JournalEntryService {
             }
             return removed;
         } catch (Exception e) {
-            System.out.println(e);
+            log.error("Error" + e);
             throw new RuntimeException("An error occured while deleting the entry.", e);
         }
     }
