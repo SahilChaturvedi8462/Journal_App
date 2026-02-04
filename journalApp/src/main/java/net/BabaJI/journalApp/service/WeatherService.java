@@ -1,6 +1,8 @@
 package net.BabaJI.journalApp.service;
 
+import net.BabaJI.journalApp.Cache.AppCache;
 import net.BabaJI.journalApp.ResponseAPI.WeatherResponse;
+import net.BabaJI.journalApp.entity.ConfigJournalAppEntity;
 import net.BabaJI.journalApp.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,14 +19,17 @@ public class WeatherService {
 
     @Value("${weather.api.key}")
     private String apiKey;
-    private static final String API = "https://api.weatherapi.com/v1/current.json?key=Acces_Key&q=CITY&aqi=no";
+    private String API;
 
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private AppCache appCache;
+
 
     public WeatherResponse getWeather(String city) {
-        String finalAPI = API.replace("CITY", city).replace("Acces_Key", apiKey);
+        String finalAPI = appCache.APP_CACHE.get("weatherApi").replace("<city>", city).replace("<apiKey>", apiKey);
 
 //        String requestBody = "{\n" +
 //                "\n  \"userName\" : \"rani\",\n" +
