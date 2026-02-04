@@ -14,3 +14,7 @@ logging:
     net:
       BabaJI:
         journalApp: DEBUG
+
+weather:
+  api:
+    key: ${API_KEY}
