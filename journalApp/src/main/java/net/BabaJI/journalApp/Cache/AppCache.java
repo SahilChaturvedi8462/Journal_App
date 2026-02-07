@@ -19,7 +19,7 @@ public class AppCache {
     public Map<String, String> APP_CACHE;
 
     @PostConstruct
-    public void inti() {
+    public void init() {
         APP_CACHE = new HashMap<>();//if we change anything in data base like name of key oor something we don't need to re run full aplication we can just create api to run thise method and by hitting it we ca reset everything again
         List<ConfigJournalAppEntity> all = configJournalAppRepo.findAll();
         for (ConfigJournalAppEntity configJournalAppEntity : all) {
