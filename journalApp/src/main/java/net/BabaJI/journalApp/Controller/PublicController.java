@@ -2,6 +2,7 @@ package net.BabaJI.journalApp.Controller;
 
 import net.BabaJI.journalApp.Repositery.UserRepoImpl;
 import net.BabaJI.journalApp.entity.User;
+import net.BabaJI.journalApp.service.EmailService;
 import net.BabaJI.journalApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,9 @@ public class PublicController {
     @Autowired
     private UserRepoImpl userRepo;
 
+    @Autowired
+    private EmailService emailService;
+
     @GetMapping
     public String healthCheck(){
         return "ok";
@@ -35,8 +39,8 @@ public class PublicController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/get")
-    public List<User> getThose(){
-        return userRepo.getUserForSA();
+    @GetMapping("/send-mail")
+    public void sendMail(){
+        emailService.sendMail("besoxor833@helesco.com", "aami tuma k bhalo bhashi", "or meri jaan kais ho😘😘😘🥰😋");
     }
 }

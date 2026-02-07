@@ -4,6 +4,18 @@ spring:
       uri: ${MONGODB_URI}
       auto-index-creation: true
       database: journaldb
+  mail:
+    port : 587
+    host: smtp.gmail.com
+    username: ${MAIL}
+    password: ${PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 Server:
   port: 8080
   Servelet:
@@ -18,3 +30,4 @@ logging:
 weather:
   api:
     key: ${API_KEY}
+
