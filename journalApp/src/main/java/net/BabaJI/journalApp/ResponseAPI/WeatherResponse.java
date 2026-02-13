@@ -1,16 +1,18 @@
 package net.BabaJI.journalApp.ResponseAPI;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Data
 public class WeatherResponse {
 
     private Location location;
     private Current current;
-
+    @Data
     public static class Location {
         private String name;
         private String region;
@@ -24,6 +26,7 @@ public class WeatherResponse {
 
     @Getter
     @Setter
+    @Data
     public static class Current {
         @JsonProperty("last_updated_epoch")
         private Integer lastUpdatedEpoch;
@@ -59,7 +62,7 @@ public class WeatherResponse {
         private Integer diff_rad;
         private Integer dni;
         private Integer gti;
-
+        @Data
         public static class Condition {
             private String text;
             private String icon;

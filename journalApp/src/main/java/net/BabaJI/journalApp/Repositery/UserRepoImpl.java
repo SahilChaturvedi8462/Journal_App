@@ -29,10 +29,8 @@ public class UserRepoImpl {
 //                query.addCriteria(Criteria.where("email").exists(true)),
 //                query.addCriteria(Criteria.where("sentimentaAnalysis").is(true))
 //        )); Thise can also be done like thise
-        System.out.println(mongoTemplate.getDb().getName());
 
         List<User> users = mongoTemplate.find(query, User.class);
-        System.out.println(query);
         return users;
     }
 }

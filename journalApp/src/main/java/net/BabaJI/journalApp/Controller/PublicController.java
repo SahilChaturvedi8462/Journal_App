@@ -41,6 +41,6 @@ public class PublicController {
 
     @GetMapping("/send-mail")
     public void sendMail(){
-        emailService.sendMail("besoxor833@helesco.com", "aami tuma k bhalo bhashi", "or meri jaan kais ho😘😘😘🥰😋");
+
     }
 }

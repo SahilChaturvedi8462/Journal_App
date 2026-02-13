@@ -19,7 +19,7 @@ public class EmailService {
             mail.setSubject(subject);
             mail.setText(body);
             javaMailSender.send(mail);
-
+            Thread.sleep(3000);
         }catch (Exception e){
             log.error("Failed to send Mail ", e);
         }
