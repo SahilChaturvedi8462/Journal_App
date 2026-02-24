@@ -2,10 +2,12 @@ package net.BabaJI.journalApp.Sceduler;
 
 import net.BabaJI.journalApp.Repositery.UserRepoImpl;
 import net.BabaJI.journalApp.entity.JournalEntry;
+import net.BabaJI.journalApp.entity.SentimentData;
 import net.BabaJI.journalApp.entity.User;
 import net.BabaJI.journalApp.enums.Sentiment;
 import net.BabaJI.journalApp.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -24,29 +26,33 @@ public class UserScedulerJava {
     @Autowired
     private UserRepoImpl userRepoimpl;
 
+    @Autowired
+    private KafkaTemplate<String, SentimentData> kafkaTemplate;
+
     @Scheduled(cron = "0 5 9 ? * SUN ")
 //    @Scheduled(cron = "0 * * * * *")
-    public void fetchUsersAndSendMail(){
+    public void fetchUsersAndSendMail() {
         List<User> users = userRepoimpl.getUserForSA();
-        for(User user : users){
+        for (User user : users) {
             List<JournalEntry> journalEntries = user.getJournalEntries();
             List<Sentiment> sentiments = journalEntries.stream().filter(x -> x.getDate().isAfter(LocalDateTime.now().minus(7, ChronoUnit.DAYS))).map(x -> x.getSentiment()).collect(Collectors.toList());
 
             Map<Sentiment, Integer> sentimentCount = new HashMap<>();
-            for(Sentiment sentiment : sentiments){
-                sentimentCount.put(sentiment, sentimentCount.getOrDefault(sentiment, 0)+1);
+            for (Sentiment sentiment : sentiments) {
+                sentimentCount.put(sentiment, sentimentCount.getOrDefault(sentiment, 0) + 1);
             }
 
             Sentiment mostFreqSentiment = null;
             int maxCount = 0;
-            for(Map.Entry<Sentiment, Integer> entry : sentimentCount.entrySet()){
-                if (entry.getValue() > maxCount){
+            for (Map.Entry<Sentiment, Integer> entry : sentimentCount.entrySet()) {
+                if (entry.getValue() > maxCount) {
                     maxCount = entry.getValue();
                     mostFreqSentiment = entry.getKey();
                 }
             }
-            if (mostFreqSentiment != null){
-                emailService.sendMail(user.getEmail(), "Sentiment of last 7 days : ", mostFreqSentiment.toString());
+            if (mostFreqSentiment != null) {
+                SentimentData sentimentData = SentimentData.builder().email(user.getEmail()).sentiment("Sentiment for last 7 days" + mostFreqSentiment).build();
+                kafkaTemplate.send("weekly-sentiments", sentimentData.getEmail(), sentimentData);
             }
         }
     }

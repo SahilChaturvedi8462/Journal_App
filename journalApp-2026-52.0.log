@@ -1,1 +1,0 @@
-2026-02-14 00:52:23 [http-nio-8080-exec-1] ERROR net.BabaJI.journalApp.service.RedisService - Exeception java.lang.NullPointerException: Cannot invoke "Object.toString()" because "o" is null 

@@ -8,7 +8,7 @@ spring:
       database: journaldb
 
   mail:
-    port : 587
+    port: 587
     host: smtp.gmail.com
     username: ${MAIL}
     password: ${PASSWORD}
@@ -18,6 +18,25 @@ spring:
           auth: true
           starttls:
             enable: true
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    consumer:
+      group-id: weekly-sentiment
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+    properties:
+      session.timeout.ms: 45000
 
 Server:
   port: 8080
@@ -33,4 +52,3 @@ logging:
 weather:
   api:
     key: ${API_KEY}
-
