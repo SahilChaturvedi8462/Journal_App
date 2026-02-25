@@ -1,12 +1,18 @@
 package net.BabaJI.journalApp.Controller;
 
+import lombok.extern.slf4j.Slf4j;
 import net.BabaJI.journalApp.Repositery.UserRepoImpl;
 import net.BabaJI.journalApp.entity.User;
 import net.BabaJI.journalApp.service.EmailService;
+import net.BabaJI.journalApp.service.UserDetailsServiceImpl;
 import net.BabaJI.journalApp.service.UserService;
+import net.BabaJI.journalApp.utilis.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/public")
+@Slf4j
 public class PublicController {
 
     @Autowired
@@ -23,15 +30,22 @@ public class PublicController {
     private UserRepoImpl userRepo;
 
     @Autowired
-    private EmailService emailService;
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
     @GetMapping
     public String healthCheck(){
         return "ok";
     }
 
-    @PostMapping("/create-user")
-    public ResponseEntity<?> createUser(@RequestBody User userData){
+    @PostMapping("/sign-up")
+    public ResponseEntity<?> signUp(@RequestBody User userData){
         boolean b = userService.saveNewEntry(userData);
         if (b){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -39,8 +53,19 @@ public class PublicController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/send-mail")
-    public void sendMail(){
+    @PostMapping("/log-in")
+    public ResponseEntity<String> logIn(@RequestBody User userData){
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userData.getUserName(), userData.getPassword()));
+            userDetailsService.loadUserByUsername(userData.getUserName());
+            String jwt = jwtUtil.generateToken(userData.getUserName());
+            return new ResponseEntity<>(jwt, HttpStatus.OK);
+        } catch (AuthenticationException e) {
+            log.error("Exception occured while creating Token ", e);
+            return new ResponseEntity<>("Incorrect UserName or Password", HttpStatus.BAD_REQUEST);
+        }
 
     }
+
 }
